@@ -18,7 +18,7 @@ def generate_index(name, description, root_url, files=None, folders=None):
     """
     if (files and folders):
         print("cannot use both files and folder at the same time, please use only one argument at a time")
-    
+
     if (folders):
         version_regex = re.compile("(\w+-)+(\d\.?)+.json")
         files = []
@@ -44,13 +44,18 @@ def generate_index(name, description, root_url, files=None, folders=None):
                 collection = collections[collection_version["id"]]
 
                 # append this as a version
-                collection["versions"].append({
-                    "version": collection_version["x_mitre_version"],
-                    "url": root_url + collection_bundle_file if root_url.endswith("/") else root_url + "/" + collection_bundle_file,
-                    "modified": collection_version["modified"],
-                    "name": collection_version["name"], # this will be deleted later in the code
-                    "description": collection_version["description"], # this will be deleted later in the code
-                })
+                collection["versions"].append(
+                    {
+                        "version": collection_version["x_mitre_version"],
+                        "url": root_url + collection_bundle_file
+                        if root_url.endswith("/")
+                        else f"{root_url}/{collection_bundle_file}",
+                        "modified": collection_version["modified"],
+                        "name": collection_version["name"],
+                        "description": collection_version["description"],
+                    }
+                )
+
                 # ensure the versions are ordered
                 collection["versions"].sort(key=lambda version: isoparse(version["modified"]), reverse=True)
 
